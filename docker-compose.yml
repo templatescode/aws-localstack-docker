@@ -1,13 +1,17 @@
-version: '3.8'
+version: "3.8"
 
 services:
   aws-localstack:
-    image: localstack/localstack:0.14.1
+    image: localstack/localstack:0.14.2
     container_name: aws-localstack
+    network_mode: bridge
     ports:
+      - "4510-4559:4510-4559"
       - "4566:4566"
     restart: on-failure
     environment:
-      - SERVICES=s3,sqs,sns,dynamodb
+      - SERVICES=cloudformation,sns,sqs,s3,dynamodb
+      - DEBUG=0
+      - DOCKER_HOST=unix:///var/run/docker.sock
     volumes:
-      - ./init-aws-scripts:/docker-entrypoint-initaws.d
+      - /var/run/docker.sock:/var/run/docker.sock
